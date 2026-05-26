@@ -55,7 +55,7 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--te
 .period-name{font-size:15px;font-weight:600}
 .period-meta{font-size:12px;color:var(--text2);margin-top:3px;line-height:1.6}
 .period-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.term-select{border:1px solid var(--border);border-radius:var(--radius);padding:6px 8px;font-family:inherit;font-size:13px;background:var(--surface);color:var(--text);cursor:pointer;outline:none;max-width:180px}
+.term-select{border:1px solid var(--border);border-radius:var(--radius);padding:6px 10px;font-family:inherit;font-size:13px;background:var(--surface);color:var(--text);cursor:pointer;outline:none;min-width:0;width:auto}
 .term-select:focus{border-color:var(--accent)}
 .period-bottom{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 
@@ -82,9 +82,9 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--te
 .banner-sub{font-size:12px;color:var(--text2);margin-top:2px}
 
 /* modal */
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:100;align-items:flex-end;justify-content:center;padding:0}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:100;align-items:center;justify-content:center;padding:20px}
 .modal-bg.open{display:flex}
-.modal{background:var(--surface);border-radius:var(--radius-lg) var(--radius-lg) 0 0;padding:24px 20px 32px;width:100%;max-width:520px;box-shadow:0 -4px 40px rgba(0,0,0,.12);max-height:90vh;overflow-y:auto}
+.modal{background:var(--surface);border-radius:var(--radius-lg);padding:28px 28px 28px;width:100%;max-width:480px;box-shadow:0 8px 40px rgba(0,0,0,.15);max-height:90vh;overflow-y:auto}
 .modal h2{font-size:17px;font-weight:700;margin-bottom:18px}
 .form-group{margin-bottom:16px}
 .form-group label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em}
@@ -219,7 +219,8 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--te
   .cal-session-badge span{display:none}
   .cal-session-badge{padding:2px 4px}
   /* modal full bottom sheet */
-  .modal{border-radius:20px 20px 0 0}
+  .modal-bg{align-items:flex-end;padding:0}
+  .modal{border-radius:20px 20px 0 0;padding:24px 20px 32px}
 }
 @media(min-width:641px){
   .tbl-row-mobile{display:none}
@@ -274,6 +275,7 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--te
         </button>
       </div>
       <button class="btn btn-sm" onclick="openEditTerm()" id="btnEdit">✏️ Sửa kỳ</button>
+      <span id="editLockHint" style="font-size:11px;color:var(--text3);display:none">Đã có điểm danh</span>
       <button class="btn btn-sm btn-primary" onclick="openNewTerm()">+ Kỳ mới</button>
     </div>
   </div>
@@ -403,6 +405,38 @@ function genSessions(startStr,count){
   return sessions;
 }
 
+// Generate N sessions starting the day AFTER afterDateStr
+function genSessionsAfter(afterDateStr,count){
+  const d=parseDate(afterDateStr);
+  d.setDate(d.getDate()+1); // start from the next day
+  return genSessions(dateStr(d),count);
+}
+
+// Check active term and extend sessionDates if needed.
+// "needed" = sessions where date has passed but not yet attended, plus sessions not yet created.
+// Rule: total sessionDates should always cover (sessions already attended) + (remaining sessions).
+// If today is past the last sessionDate and there are still unattended slots → extend.
+function autoExtendActiveTerm(){
+  const t=getTerm(state.activeTerm);
+  if(!t||!t.sessionDates)return false;
+  const today=dateStr(new Date());
+  const attended=Object.values(t.attended||{}).filter(Boolean).length;
+  const remaining=t.sessions-attended;
+  if(remaining<=0)return false; // term complete, nothing to extend
+
+  // Count how many future (>= today) sessions exist in sessionDates
+  const futureSessions=t.sessionDates.filter(ds=>ds>=today).length;
+  // We need at least "remaining" sessions that are today or future
+  const shortage=remaining-futureSessions;
+  if(shortage<=0)return false; // enough future sessions, no extension needed
+
+  // Extend from after the last sessionDate
+  const lastDate=t.sessionDates[t.sessionDates.length-1];
+  const newDates=genSessionsAfter(lastDate,shortage);
+  t.sessionDates=[...t.sessionDates,...newDates];
+  return true; // state was mutated
+}
+
 // ── State ────────────────────────────────────────────────
 let state={terms:[],activeTerm:null,viewTerm:null};
 let noteTimers={};
@@ -428,7 +462,13 @@ onValue(dbRef,(snapshot)=>{
   // always show latest term by default
   if(state.terms&&state.terms.length) state.viewTerm=state.terms[state.terms.length-1].id;
   else if(!state.viewTerm) state.viewTerm=state.activeTerm;
-  setSyncStatus('synced','Đã đồng bộ');
+  // auto-extend active term if past sessions are missing
+  const extended=autoExtendActiveTerm();
+  if(extended){
+    pushToFirebase(); // persist extended dates
+  } else {
+    setSyncStatus('synced','Đã đồng bộ');
+  }
   render();
 },(err)=>{setSyncStatus('error','Lỗi kết nối');});
 
@@ -499,6 +539,23 @@ function renderStats(){
   let meta=badge+' &nbsp;Đóng: '+fmtDate(vt.paidDate)+' &nbsp;·&nbsp; Bắt đầu: '+fmtDate(vt.startDate);
   if(vt.note)meta+=' &nbsp;·&nbsp; <em style="color:var(--text2)">'+vt.note+'</em>';
   document.getElementById('periodMeta').innerHTML=meta;
+  // lock edit button if term has attendance
+  const editBtn=document.getElementById('btnEdit');
+  const lockHint=document.getElementById('editLockHint');
+  if(vt&&vt.id===state.activeTerm){
+    const hasTick=Object.values(vt.attended||{}).some(Boolean);
+    editBtn.disabled=hasTick;
+    editBtn.style.opacity=hasTick?'0.4':'1';
+    editBtn.style.cursor=hasTick?'not-allowed':'pointer';
+    editBtn.title=hasTick?'Không thể sửa khi đã có điểm danh':'Sửa kỳ đang xem';
+    if(lockHint)lockHint.style.display=hasTick?'inline':'none';
+  } else {
+    editBtn.disabled=true;
+    editBtn.style.opacity='0.4';
+    editBtn.style.cursor='not-allowed';
+    editBtn.title='Chỉ có thể sửa kỳ đang học';
+    if(lockHint)lockHint.style.display='none';
+  }
 }
 
 function render(){
@@ -515,7 +572,16 @@ function renderList(){
   const list=document.getElementById('sessionList');
   if(!vt){list.innerHTML='<div class="empty">Chưa có kỳ học nào</div>';return;}
   list.innerHTML='';
-  (vt.sessionDates||[]).forEach((ds,i)=>{
+  // sort: unattended first, attended at bottom
+  const indices=(vt.sessionDates||[]).map((_,i)=>i);
+  indices.sort((a,b)=>{
+    const aa=!!(vt.attended||{})[a];
+    const bb=!!(vt.attended||{})[b];
+    if(aa===bb)return a-b;
+    return aa?1:-1;
+  });
+  indices.forEach(i=>{
+    const ds=vt.sessionDates[i];
     const d=parseDate(ds);
     const isSat=d.getDay()===6;
     const isToday=ds===today;
@@ -564,6 +630,7 @@ function renderList(){
       const t=getTerm(state.activeTerm);if(!t)return;
       if(!t.attended)t.attended={};
       t.attended[idx]=!t.attended[idx];
+      autoExtendActiveTerm(); // re-check after each tick
       pushToFirebase();
     });
   });
@@ -583,6 +650,7 @@ function renderList(){
       const t=getTerm(state.activeTerm);if(!t)return;
       if(!t.attended)t.attended={};
       t.attended[idx]=!t.attended[idx];
+      autoExtendActiveTerm(); // re-check after each tick
       pushToFirebase();
     });
   });
@@ -689,6 +757,7 @@ function openPopup(ds,session,anchorEl){
     document.getElementById('popupTickBtn').onclick=()=>{
       if(!t.attended)t.attended={};
       t.attended[session.idx]=!t.attended[session.idx];
+      autoExtendActiveTerm();
       pushToFirebase();
       closePopup();
     };
