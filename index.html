@@ -1425,7 +1425,7 @@ input,textarea{font-size:var(--fs-16)} /* avoid iOS zoom */
 
     <header class="page-header">
       <div>
-        <h1 class="page-title">Buổi học</h1>
+        <h1 class="page-title">🩰 Điểm danh - Tú Linh</h1>
         <div class="page-subtitle">Thứ Bảy &amp; Chủ Nhật hàng tuần</div>
       </div>
     </header>
@@ -1493,7 +1493,7 @@ input,textarea{font-size:var(--fs-16)} /* avoid iOS zoom */
       <div class="section-head" style="margin-bottom:var(--s-3)">
         <div>
           <div class="section-title" id="viewTitle">Lịch tháng</div>
-          <div class="section-sub" id="viewSub">Bấm vào ô có buổi học để tick</div>
+          <div class="section-sub" id="viewSub">Xem lịch điểm danh</div>
         </div>
         <div class="view-tabs" role="tablist" aria-label="Chế độ xem">
           <button class="view-tab" id="vtList" onclick="setView('list')" role="tab" aria-selected="false" type="button">
@@ -2185,10 +2185,10 @@ function syncViewToggleUI(v){
   const sub=document.getElementById('viewSub');
   if(v==='calendar'){
     if(title)title.textContent='Lịch tháng';
-    if(sub)sub.textContent='Bấm vào ô có buổi học để tick';
+    if(sub)sub.textContent='Xem điểm danh theo tháng';
   } else {
-    if(title)title.textContent='Tất cả buổi';
-    if(sub)sub.textContent='Buổi chưa học hiển thị trước';
+    if(title)title.textContent='Danh sách buổi học';
+    if(sub)sub.textContent='Xem danh sách buổi học';
   }
 }
 window.calPrev=function(){calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCalendar();};
