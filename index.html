@@ -102,6 +102,9 @@
 
   /* Shared pink gradient used by header card, mobile topbar, and sidebar */
   --header-gradient:linear-gradient(135deg, rgba(255,193,210,.42) 0%, rgba(255,213,192,.32) 45%, rgba(245,201,220,.38) 100%);
+
+  /* Mobile topbar — fade gradient that softly transitions into content below (iOS Safari style) */
+  --topbar-fade:linear-gradient(to bottom, rgba(255,238,244,.92) 0%, rgba(255,238,244,.50) 100%);
 }
 
 /* DARK THEME */
@@ -157,6 +160,8 @@
   /* Shared pink gradient — dark theme variant (muted, lower alpha for dark glass) */
   --header-gradient:linear-gradient(135deg, rgba(255,55,95,.18) 0%, rgba(255,120,80,.10) 45%, rgba(200,90,180,.16) 100%);
 
+  --topbar-fade:linear-gradient(to bottom, rgba(20,18,28,.88) 0%, rgba(20,18,28,.45) 100%);
+
   --shadow-1:0 1px 2px rgba(0,0,0,.4);
   --shadow-2:0 4px 12px rgba(0,0,0,.45);
   --shadow-3:0 12px 40px rgba(0,0,0,.6);
@@ -203,6 +208,7 @@
     --blob-4:#3A2110;
     --noise-opacity:.04;
     --header-gradient:linear-gradient(135deg, rgba(255,55,95,.18) 0%, rgba(255,120,80,.10) 45%, rgba(200,90,180,.16) 100%);
+    --topbar-fade:linear-gradient(to bottom, rgba(20,18,28,.88) 0%, rgba(20,18,28,.45) 100%);
     --shadow-1:0 1px 2px rgba(0,0,0,.4);
     --shadow-2:0 4px 12px rgba(0,0,0,.45);
     --shadow-3:0 12px 40px rgba(0,0,0,.6);
@@ -467,15 +473,15 @@ input,textarea{font-size:var(--fs-16)} /* avoid iOS zoom */
 /* ─── MOBILE TOPBAR ───────────────────────────────── */
 .mobile-topbar{
   display:none;
-  position:sticky;top:var(--s-2);z-index:9;
+  position:sticky;top:0;z-index:9;
+  /* extend to viewport edges by canceling main's padding */
+  margin:calc(-1 * var(--s-4)) calc(-1 * var(--s-4)) var(--s-2);
   padding:var(--s-3) var(--s-4);
-  border-radius:var(--r-lg);
-  background:var(--header-gradient), var(--surface);
-  backdrop-filter:blur(40px) saturate(180%);
-  -webkit-backdrop-filter:blur(40px) saturate(180%);
-  border:1px solid var(--tint-border);
-  box-shadow:var(--shadow-1), inset 0 1px 0 var(--highlight);
+  background:var(--topbar-fade);
+  backdrop-filter:blur(24px) saturate(180%);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);
   align-items:center;gap:var(--s-3);
+  /* no border, no border-radius, no box-shadow */
 }
 .mobile-menu-btn{
   width:40px;height:40px;border-radius:var(--r-sm);
@@ -506,31 +512,34 @@ input,textarea{font-size:var(--fs-16)} /* avoid iOS zoom */
 }
 
 .page-header{
-  display:flex;align-items:flex-end;justify-content:space-between;
-  flex-wrap:wrap;gap:var(--s-3);
-  position:relative;overflow:hidden;
-  padding:var(--s-6) var(--s-6);
-  border-radius:var(--r-xl);
-  background:var(--header-gradient), var(--surface);
-  border:1px solid var(--tint-border);
-  backdrop-filter:blur(40px) saturate(180%);
-  -webkit-backdrop-filter:blur(40px) saturate(180%);
-  box-shadow:var(--shadow-1), inset 0 1px 0 var(--highlight);
+  display:flex;flex-direction:column;
+  gap:8px;padding:0 var(--s-1);
+  position:relative;
 }
-.page-header::before{
-  content:"";position:absolute;top:-40%;right:-8%;
-  width:50%;aspect-ratio:1;border-radius:50%;
-  background:radial-gradient(circle, var(--tint) 0%, transparent 65%);
-  opacity:.15;pointer-events:none;filter:blur(24px);
+.page-eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:var(--fs-11);font-weight:600;
+  text-transform:uppercase;letter-spacing:.16em;
+  color:var(--tint);
+  align-self:flex-start;
+}
+.page-eyebrow::before{
+  content:"";width:28px;height:2px;
+  background:linear-gradient(90deg, var(--tint) 0%, var(--tint-purple) 100%);
+  border-radius:1px;flex-shrink:0;
 }
 .page-title{
   font-family:'Inter Tight','Inter',sans-serif;
   font-size:var(--fs-34);font-weight:800;
-  letter-spacing:-.025em;color:var(--text);
+  letter-spacing:-.03em;color:var(--text);
   line-height:1.05;
-  position:relative;
 }
-.page-subtitle{font-size:var(--fs-14);color:var(--text-2);margin-top:var(--s-1);position:relative}
+.page-title .accent{
+  background:linear-gradient(135deg, var(--tint) 0%, var(--tint-purple) 100%);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
+}
+.page-subtitle{font-size:var(--fs-14);color:var(--text-2)}
 
 /* ─── TODAY HERO CARD ─────────────────────────────── */
 .today-hero{
@@ -1424,10 +1433,9 @@ input,textarea{font-size:var(--fs-16)} /* avoid iOS zoom */
     </div>
 
     <header class="page-header">
-      <div>
-        <h1 class="page-title">🩰 Điểm danh - Tú Linh</h1>
-        <div class="page-subtitle">Thứ Bảy &amp; Chủ Nhật hàng tuần</div>
-      </div>
+      <div class="page-eyebrow">Lớp Ballet · Tú Linh</div>
+      <h1 class="page-title"><span class="accent">Điểm</span> danh</h1>
+      <div class="page-subtitle">Thứ Bảy &amp; Chủ Nhật hàng tuần</div>
     </header>
 
     <!-- TODAY HERO -->
