@@ -48,19 +48,19 @@
   --ease-in-out:cubic-bezier(.65,0,.35,1);
 }
 
-/* LIGHT THEME */
+/* LIGHT THEME — pink ballet skin */
 :root,
 [data-theme="light"]{
-  --bg:#F2F2F7;
+  --bg:#FBF3F6;            /* warm cream-pink */
   --bg-elevated:#FFFFFF;
 
-  --surface:rgba(255,255,255,.72);
-  --surface-2:rgba(255,255,255,.55);
-  --surface-3:rgba(255,255,255,.38);
-  --surface-glass:rgba(255,255,255,.65);
+  --surface:rgba(255,255,255,.74);
+  --surface-2:rgba(255,250,252,.60);
+  --surface-3:rgba(255,250,252,.42);
+  --surface-glass:rgba(255,252,253,.68);
 
-  --border:rgba(60,60,67,.12);
-  --border-2:rgba(60,60,67,.18);
+  --border:rgba(120,40,70,.10);
+  --border-2:rgba(120,40,70,.16);
   --highlight:rgba(255,255,255,.85);
 
   --text:#1C1C1E;
@@ -68,12 +68,12 @@
   --text-3:#8E8E93;
   --text-4:#C7C7CC;
 
-  --separator:rgba(60,60,67,.10);
-  --separator-2:rgba(60,60,67,.18);
+  --separator:rgba(120,40,70,.09);
+  --separator-2:rgba(120,40,70,.16);
 
   --tint:var(--tint-pink);
-  --tint-bg:#FFF0F3;
-  --tint-border:#FFD0D8;
+  --tint-bg:#FFE9EE;
+  --tint-border:#FFC8D4;
 
   --success:var(--tint-green);
   --success-bg:#E8F8EC;
@@ -87,18 +87,21 @@
   --danger-bg:#FFE8E6;
 
   --sat-color:var(--tint-pink);
-  --sat-bg:#FFEEF1;
-  --sat-border:#FFCED8;
+  --sat-bg:#FFE5EC;
+  --sat-border:#FFC2D2;
   --sun-color:var(--tint-purple);
   --sun-bg:#F7ECFB;
   --sun-border:#E4CBF1;
 
-  /* background mesh blobs */
-  --blob-1:#FFD8E0;
-  --blob-2:#E0E8FF;
-  --blob-3:#E8FBE5;
-  --blob-4:#FFE9C9;
-  --noise-opacity:.025;
+  /* background mesh blobs — pink + peach + rose */
+  --blob-1:#FFC1D2;        /* pink */
+  --blob-2:#FFDEEA;        /* pale pink */
+  --blob-3:#F5C9DC;        /* rose */
+  --blob-4:#FFD5C0;        /* warm peach */
+  --noise-opacity:.028;
+
+  /* Shared pink gradient used by header card, mobile topbar, and sidebar */
+  --header-gradient:linear-gradient(135deg, rgba(255,193,210,.42) 0%, rgba(255,213,192,.32) 45%, rgba(245,201,220,.38) 100%);
 }
 
 /* DARK THEME */
@@ -151,6 +154,9 @@
   --blob-4:#3A2110;
   --noise-opacity:.04;
 
+  /* Shared pink gradient — dark theme variant (muted, lower alpha for dark glass) */
+  --header-gradient:linear-gradient(135deg, rgba(255,55,95,.18) 0%, rgba(255,120,80,.10) 45%, rgba(200,90,180,.16) 100%);
+
   --shadow-1:0 1px 2px rgba(0,0,0,.4);
   --shadow-2:0 4px 12px rgba(0,0,0,.45);
   --shadow-3:0 12px 40px rgba(0,0,0,.6);
@@ -196,6 +202,7 @@
     --blob-3:#0E2A1F;
     --blob-4:#3A2110;
     --noise-opacity:.04;
+    --header-gradient:linear-gradient(135deg, rgba(255,55,95,.18) 0%, rgba(255,120,80,.10) 45%, rgba(200,90,180,.16) 100%);
     --shadow-1:0 1px 2px rgba(0,0,0,.4);
     --shadow-2:0 4px 12px rgba(0,0,0,.45);
     --shadow-3:0 12px 40px rgba(0,0,0,.6);
@@ -277,10 +284,10 @@ input,textarea{font-size:var(--fs-16)} /* avoid iOS zoom */
   height:100dvh;
   display:flex;flex-direction:column;
   padding:var(--s-5) var(--s-4);
-  background:var(--surface);
+  background:var(--header-gradient), var(--surface);
   backdrop-filter:blur(40px) saturate(180%);
   -webkit-backdrop-filter:blur(40px) saturate(180%);
-  border-right:1px solid var(--border);
+  border-right:1px solid var(--tint-border);
   z-index:10;
   transition:transform .35s var(--ease-out);
 }
@@ -357,24 +364,71 @@ input,textarea{font-size:var(--fs-16)} /* avoid iOS zoom */
 }
 .term-text-meta{font-size:var(--fs-11);color:var(--text-3);margin-top:1px}
 
-.new-term-btn{
+/* Sửa kỳ + Quản lý: subtle text-button (cùng style với sidebar-footer-btn) */
+.sidebar-action-btn{
   display:flex;align-items:center;gap:var(--s-2);
   padding:10px 12px;border-radius:var(--r-sm);
-  font-size:var(--fs-13);font-weight:600;
-  color:var(--tint);
-  border:1px dashed var(--tint-border);
-  background:transparent;width:100%;
-  margin-top:var(--s-2);
-  transition:background .18s var(--ease-out);
+  font-size:var(--fs-13);font-weight:500;
+  color:var(--text-2);background:transparent;
+  border:1px solid transparent;
+  width:100%;text-align:left;
+  transition:background .18s var(--ease-out), color .18s var(--ease-out);
   min-height:40px;
 }
-.new-term-btn:hover{background:var(--tint-bg)}
+.sidebar-action-btn:hover:not(:disabled){background:var(--surface-2);color:var(--text)}
+.sidebar-action-btn:disabled{opacity:.4;cursor:not-allowed}
+.sidebar-action-btn svg{flex-shrink:0;opacity:.75}
+.sidebar-action-btn:hover:not(:disabled) svg{opacity:1}
 
+/* Kỳ mới: primary CTA, gradient pink fill */
+.new-term-btn{
+  display:flex;align-items:center;gap:var(--s-2);
+  padding:11px 14px;border-radius:var(--r-sm);
+  font-size:var(--fs-13);font-weight:600;
+  color:#fff;
+  background:linear-gradient(135deg, var(--tint) 0%, #FF6584 100%);
+  border:1px solid var(--tint);
+  width:100%;text-align:left;
+  transition:transform .15s var(--ease-spring), box-shadow .2s, filter .15s;
+  min-height:44px;
+  box-shadow:0 6px 16px -4px var(--tint), inset 0 1px 0 rgba(255,255,255,.3);
+  letter-spacing:-.005em;
+}
+.new-term-btn:hover{
+  transform:translateY(-1px);filter:brightness(1.06);
+  box-shadow:0 8px 20px -4px var(--tint), inset 0 1px 0 rgba(255,255,255,.3);
+}
+.new-term-btn:active{transform:translateY(0)}
+.new-term-btn svg{flex-shrink:0;opacity:.95}
+
+.sidebar-hint{
+  font-size:var(--fs-11);color:var(--text-3);
+  font-style:italic;
+  padding:6px 12px 0;line-height:1.4;
+}
+
+.sidebar-section-terms{
+  flex:1;min-height:0;
+  overflow-y:auto;
+  scrollbar-width:thin;
+}
 .sidebar-footer{
-  margin-top:auto;padding:var(--s-3) var(--s-2) 0;
+  margin-top:auto;
+  padding:0 var(--s-2);
+  display:flex;flex-direction:column;gap:var(--s-4);
+}
+.footer-actions{
+  display:flex;flex-direction:column;gap:6px;
+  padding-top:var(--s-3);
   border-top:1px solid var(--separator);
+}
+.footer-actions .sidebar-action-btn,
+.footer-actions .new-term-btn{margin-top:0}
+.footer-actions .sidebar-hint{padding:2px 12px 0}
+.footer-system{
   display:flex;flex-direction:column;gap:var(--s-2);
-  padding-top:var(--s-4);
+  padding-top:var(--s-3);
+  border-top:1px solid var(--separator);
 }
 
 /* sync chip */
@@ -413,12 +467,14 @@ input,textarea{font-size:var(--fs-16)} /* avoid iOS zoom */
 /* ─── MOBILE TOPBAR ───────────────────────────────── */
 .mobile-topbar{
   display:none;
-  position:sticky;top:0;z-index:9;
+  position:sticky;top:var(--s-2);z-index:9;
   padding:var(--s-3) var(--s-4);
-  background:var(--surface);
+  border-radius:var(--r-lg);
+  background:var(--header-gradient), var(--surface);
   backdrop-filter:blur(40px) saturate(180%);
   -webkit-backdrop-filter:blur(40px) saturate(180%);
-  border-bottom:1px solid var(--border);
+  border:1px solid var(--tint-border);
+  box-shadow:var(--shadow-1), inset 0 1px 0 var(--highlight);
   align-items:center;gap:var(--s-3);
 }
 .mobile-menu-btn{
@@ -452,14 +508,29 @@ input,textarea{font-size:var(--fs-16)} /* avoid iOS zoom */
 .page-header{
   display:flex;align-items:flex-end;justify-content:space-between;
   flex-wrap:wrap;gap:var(--s-3);
+  position:relative;overflow:hidden;
+  padding:var(--s-6) var(--s-6);
+  border-radius:var(--r-xl);
+  background:var(--header-gradient), var(--surface);
+  border:1px solid var(--tint-border);
+  backdrop-filter:blur(40px) saturate(180%);
+  -webkit-backdrop-filter:blur(40px) saturate(180%);
+  box-shadow:var(--shadow-1), inset 0 1px 0 var(--highlight);
+}
+.page-header::before{
+  content:"";position:absolute;top:-40%;right:-8%;
+  width:50%;aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle, var(--tint) 0%, transparent 65%);
+  opacity:.15;pointer-events:none;filter:blur(24px);
 }
 .page-title{
   font-family:'Inter Tight','Inter',sans-serif;
   font-size:var(--fs-34);font-weight:800;
   letter-spacing:-.025em;color:var(--text);
   line-height:1.05;
+  position:relative;
 }
-.page-subtitle{font-size:var(--fs-14);color:var(--text-3);margin-top:var(--s-1)}
+.page-subtitle{font-size:var(--fs-14);color:var(--text-2);margin-top:var(--s-1);position:relative}
 
 /* ─── TODAY HERO CARD ─────────────────────────────── */
 .today-hero{
@@ -599,15 +670,43 @@ input,textarea{font-size:var(--fs-16)} /* avoid iOS zoom */
   text-transform:uppercase;letter-spacing:.06em;
 }
 
-/* progress */
+/* progress + period info */
 .progress-wrap{
-  padding:var(--s-4) var(--s-5);
+  padding:var(--s-5);
   border-radius:var(--r-lg);
   background:var(--surface);
   border:1px solid var(--border);
   backdrop-filter:blur(40px) saturate(180%);
   -webkit-backdrop-filter:blur(40px) saturate(180%);
   box-shadow:var(--shadow-1), inset 0 1px 0 var(--highlight);
+}
+.period-row{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:var(--s-3);flex-wrap:wrap;
+  padding-bottom:var(--s-3);margin-bottom:var(--s-4);
+  border-bottom:1px solid var(--separator);
+}
+.period-row .period-info{flex:1;min-width:200px}
+.period-row .period-name{
+  display:inline-flex;align-items:center;gap:var(--s-2);flex-wrap:wrap;
+  font-family:'Inter Tight','Inter',sans-serif;
+  font-size:var(--fs-17);font-weight:700;
+  letter-spacing:-.015em;color:var(--text);
+  line-height:1.2;
+}
+.period-row .period-dates{
+  display:flex;align-items:center;gap:var(--s-3);flex-wrap:wrap;
+  font-size:var(--fs-13);color:var(--text-2);margin-top:6px;
+}
+.period-row .period-dates .meta-item{
+  display:inline-flex;align-items:center;gap:5px;
+}
+.period-row .period-dates .meta-item svg{color:var(--text-3);flex-shrink:0}
+.period-row .period-dates .meta-label{color:var(--text-3);font-weight:500}
+.period-row .period-dates .meta-val{color:var(--text);font-weight:600;font-variant-numeric:tabular-nums}
+.period-row .period-note{
+  font-size:var(--fs-12);color:var(--text-3);
+  margin-top:4px;font-style:italic;
 }
 .progress-meta{
   display:flex;justify-content:space-between;align-items:center;
@@ -631,7 +730,7 @@ input,textarea{font-size:var(--fs-16)} /* avoid iOS zoom */
   transition:width .6s var(--ease-out);
 }
 
-/* ─── UPCOMING ───────────────────────────────────── */
+/* section heads (used by list/calendar views) */
 .section-head{
   display:flex;align-items:center;justify-content:space-between;
   gap:var(--s-3);margin-top:var(--s-2);
@@ -642,73 +741,6 @@ input,textarea{font-size:var(--fs-16)} /* avoid iOS zoom */
   letter-spacing:-.015em;color:var(--text);
 }
 .section-sub{font-size:var(--fs-13);color:var(--text-3);margin-top:2px}
-
-.upcoming-list{
-  display:flex;flex-direction:column;gap:var(--s-2);
-  padding:var(--s-2);
-  border-radius:var(--r-lg);
-  background:var(--surface);
-  border:1px solid var(--border);
-  backdrop-filter:blur(40px) saturate(180%);
-  -webkit-backdrop-filter:blur(40px) saturate(180%);
-  box-shadow:var(--shadow-1), inset 0 1px 0 var(--highlight);
-}
-.upcoming-item{
-  display:flex;align-items:center;gap:var(--s-4);
-  padding:var(--s-3) var(--s-4);border-radius:var(--r-md);
-  transition:background .15s;
-  min-height:56px;
-}
-.upcoming-item:hover{background:var(--surface-2)}
-.up-day{
-  width:48px;text-align:center;flex-shrink:0;
-  padding:6px 0;border-radius:var(--r-sm);
-  background:var(--surface-2);
-}
-.up-day.sat{background:var(--sat-bg);color:var(--sat-color)}
-.up-day.sun{background:var(--sun-bg);color:var(--sun-color)}
-.up-day-num{
-  font-family:'Inter Tight','Inter',sans-serif;
-  font-size:var(--fs-17);font-weight:700;line-height:1;
-}
-.up-day-month{
-  font-size:var(--fs-10);font-weight:600;
-  text-transform:uppercase;letter-spacing:.08em;
-  opacity:.7;margin-top:2px;
-}
-.up-info{flex:1;min-width:0}
-.up-title{font-size:var(--fs-15);font-weight:600;color:var(--text)}
-.up-meta{font-size:var(--fs-12);color:var(--text-3);margin-top:2px}
-.up-tick{
-  padding:8px 16px;border-radius:var(--r-full);
-  background:var(--surface-2);border:1px solid var(--border-2);
-  font-size:var(--fs-13);font-weight:600;color:var(--text-2);
-  transition:all .18s var(--ease-out);
-  min-height:36px;
-}
-.up-tick:hover{background:var(--tint-bg);color:var(--tint);border-color:var(--tint-border)}
-
-/* ─── PERIOD STRIP ───────────────────────────────── */
-.period-strip{
-  display:flex;align-items:center;justify-content:space-between;
-  gap:var(--s-4);flex-wrap:wrap;
-  padding:var(--s-4) var(--s-5);
-  border-radius:var(--r-lg);
-  background:var(--surface);
-  border:1px solid var(--border);
-  backdrop-filter:blur(40px) saturate(180%);
-  -webkit-backdrop-filter:blur(40px) saturate(180%);
-  box-shadow:var(--shadow-1), inset 0 1px 0 var(--highlight);
-}
-.period-info{flex:1;min-width:220px}
-.period-name{
-  font-family:'Inter Tight','Inter',sans-serif;
-  font-size:var(--fs-17);font-weight:700;
-  letter-spacing:-.015em;color:var(--text);
-}
-.period-meta{font-size:var(--fs-13);color:var(--text-3);margin-top:2px;line-height:1.5}
-.period-meta em{font-style:italic;color:var(--text-2)}
-.period-actions{display:flex;gap:var(--s-2);flex-wrap:wrap;align-items:center}
 
 /* badges */
 .badge{
@@ -1151,6 +1183,64 @@ input,textarea{font-size:var(--fs-16)} /* avoid iOS zoom */
   border-top:1px solid var(--separator);
 }
 
+/* ─── MANAGE TERMS MODAL ─────────────────────────── */
+.sidebar-footer-btn{
+  display:flex;align-items:center;gap:var(--s-2);
+  padding:10px 12px;border-radius:var(--r-sm);
+  font-size:var(--fs-13);font-weight:500;
+  color:var(--text-2);background:transparent;
+  border:1px solid transparent;
+  width:100%;text-align:left;
+  transition:background .18s var(--ease-out), color .18s var(--ease-out);
+  min-height:40px;
+}
+.sidebar-footer-btn:hover{background:var(--surface-2);color:var(--text)}
+.sidebar-footer-btn svg{flex-shrink:0;opacity:.75}
+.sidebar-footer-btn:hover svg{opacity:1}
+
+.manage-list{
+  display:flex;flex-direction:column;gap:var(--s-2);
+  margin-top:var(--s-3);max-height:60dvh;overflow-y:auto;
+  padding-right:2px;
+}
+.manage-term{
+  display:flex;align-items:flex-start;gap:var(--s-3);
+  padding:var(--s-4);border-radius:var(--r-md);
+  background:var(--surface-2);border:1px solid var(--border);
+  transition:background .15s;
+}
+.manage-term.current{
+  background:var(--tint-bg);border-color:var(--tint-border);
+}
+.manage-term-info{flex:1;min-width:0}
+.manage-term-name{
+  display:inline-flex;align-items:center;gap:var(--s-2);flex-wrap:wrap;
+  font-family:'Inter Tight','Inter',sans-serif;
+  font-size:var(--fs-15);font-weight:700;color:var(--text);
+  letter-spacing:-.005em;
+}
+.manage-term-meta{font-size:var(--fs-12);color:var(--text-2);margin-top:4px;line-height:1.5}
+.manage-term-progress{
+  font-size:var(--fs-11);color:var(--text-3);margin-top:4px;
+  font-variant-numeric:tabular-nums;font-weight:500;
+}
+.manage-term-note{
+  font-size:var(--fs-12);color:var(--text-3);margin-top:4px;
+  font-style:italic;line-height:1.4;
+}
+.btn-danger{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:7px 12px;border-radius:var(--r-full);
+  background:transparent;border:1px solid var(--danger);
+  color:var(--danger);font-size:var(--fs-12);font-weight:600;
+  transition:all .18s var(--ease-out);
+  min-height:34px;flex-shrink:0;
+  white-space:nowrap;
+}
+.btn-danger:hover{background:var(--danger);color:#fff;transform:translateY(-1px)}
+.btn-danger:active{transform:translateY(0)}
+.btn-danger svg{flex-shrink:0}
+
 /* ─── EMPTY / LOADING ────────────────────────────── */
 .empty{
   text-align:center;padding:var(--s-12) var(--s-4);
@@ -1199,9 +1289,6 @@ input,textarea{font-size:var(--fs-16)} /* avoid iOS zoom */
     padding:var(--s-5) var(--s-4) var(--s-8);
     max-height:92dvh;
   }
-  .upcoming-item{padding:var(--s-3)}
-  .up-day{width:44px}
-  .period-strip{padding:var(--s-3) var(--s-4)}
   .section-title{font-size:var(--fs-17)}
 }
 
@@ -1243,9 +1330,16 @@ input,textarea{font-size:var(--fs-16)} /* avoid iOS zoom */
   <aside class="sidebar" id="sidebar" aria-label="Điều hướng chính">
     <div class="sidebar-brand">
       <div class="brand-mark" aria-hidden="true">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M9 11l3 3L22 4"/>
-          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+        <!-- ballet pointe shoe + ribbon -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <!-- shoe body (pointe slipper silhouette) -->
+          <path d="M3.5 13c0-4.4 3.2-7 8.5-7s8.5 2.6 8.5 7c0 1.6-1.6 2.6-4.5 2.6h-8c-2.9 0-4.5-1-4.5-2.6z" fill="currentColor" fill-opacity=".18"/>
+          <path d="M3.5 13c0-4.4 3.2-7 8.5-7s8.5 2.6 8.5 7c0 1.6-1.6 2.6-4.5 2.6h-8c-2.9 0-4.5-1-4.5-2.6z"/>
+          <!-- ribbon ties -->
+          <path d="M8 15.6 L6.5 20.5"/>
+          <path d="M16 15.6 L17.5 20.5"/>
+          <!-- decorative ribbon knot at top -->
+          <path d="M10.5 6.4 C 11 5.2 13 5.2 13.5 6.4"/>
         </svg>
       </div>
       <div class="brand-meta">
@@ -1256,14 +1350,14 @@ input,textarea{font-size:var(--fs-16)} /* avoid iOS zoom */
 
     <div class="sidebar-section">
       <div class="section-label">Xem</div>
-      <button class="nav-item active" id="btnList" onclick="setView('list')" type="button">
+      <button class="nav-item" id="btnList" onclick="setView('list')" type="button">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
           <circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/>
         </svg>
         Danh sách
       </button>
-      <button class="nav-item" id="btnCal" onclick="setView('calendar')" type="button">
+      <button class="nav-item active" id="btnCal" onclick="setView('calendar')" type="button">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="4" width="18" height="18" rx="3"/>
           <line x1="3" y1="10" x2="21" y2="10"/>
@@ -1273,16 +1367,31 @@ input,textarea{font-size:var(--fs-16)} /* avoid iOS zoom */
       </button>
     </div>
 
-    <div class="sidebar-section">
+    <div class="sidebar-section sidebar-section-terms">
       <div class="section-label">Kỳ học</div>
       <div id="sidebarTermsList"></div>
-      <button class="new-term-btn" onclick="openNewTerm()" type="button">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Kỳ mới
-      </button>
     </div>
 
     <div class="sidebar-footer">
+      <div class="footer-actions">
+        <button class="new-term-btn" onclick="openNewTerm()" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Kỳ mới
+        </button>
+        <button class="sidebar-action-btn" onclick="openEditTerm()" id="btnEdit" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Sửa kỳ hiện tại
+        </button>
+        <div id="editLockHint" class="sidebar-hint" style="display:none">Không thể sửa khi đã có điểm danh</div>
+        <button class="sidebar-footer-btn" onclick="openManageTerms()" type="button" aria-label="Quản lý kỳ học">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="14" y2="12"/><line x1="4" y1="18" x2="10" y2="18"/>
+            <circle cx="18" cy="16" r="3"/><path d="M18 14v-1"/><path d="M18 19v-1"/>
+          </svg>
+          Quản lý kỳ học
+        </button>
+      </div>
+      <div class="footer-system">
       <div class="sync-chip syncing" id="syncDot" role="status" aria-live="polite">
         <span class="dot"></span>
         <span id="syncText">Đang kết nối...</span>
@@ -1297,6 +1406,7 @@ input,textarea{font-size:var(--fs-16)} /* avoid iOS zoom */
         <button class="theme-btn" data-theme="dark" onclick="setTheme('dark')" aria-label="Tối" title="Tối">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         </button>
+      </div>
       </div>
     </div>
   </aside>
@@ -1350,39 +1460,20 @@ input,textarea{font-size:var(--fs-16)} /* avoid iOS zoom */
       </div>
     </section>
 
-    <!-- PROGRESS -->
+    <!-- PROGRESS + PERIOD INFO -->
     <section class="progress-wrap">
+      <div class="period-row">
+        <div class="period-info">
+          <div class="period-name" id="periodName">—</div>
+          <div class="period-dates" id="periodMeta">—</div>
+          <div class="period-note" id="periodNote" style="display:none"></div>
+        </div>
+      </div>
       <div class="progress-meta">
         <span class="progress-text" id="progressText">—</span>
         <span class="progress-pct tabular" id="progressPct">0%</span>
       </div>
       <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-    </section>
-
-    <!-- UPCOMING -->
-    <section id="upcomingSection" style="display:none">
-      <div class="section-head">
-        <div>
-          <div class="section-title">Sắp tới</div>
-          <div class="section-sub">3 buổi học gần nhất</div>
-        </div>
-      </div>
-      <div class="upcoming-list" id="upcomingList"></div>
-    </section>
-
-    <!-- PERIOD STRIP -->
-    <section class="period-strip">
-      <div class="period-info">
-        <div class="period-name" id="periodName">—</div>
-        <div class="period-meta" id="periodMeta">—</div>
-      </div>
-      <div class="period-actions">
-        <button class="btn btn-sm" onclick="openEditTerm()" id="btnEdit">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-          Sửa kỳ
-        </button>
-        <span id="editLockHint" style="font-size:11px;color:var(--text-3);display:none;font-style:italic">Đã có điểm danh</span>
-      </div>
     </section>
 
     <!-- COMPLETION BANNER -->
@@ -1397,66 +1488,58 @@ input,textarea{font-size:var(--fs-16)} /* avoid iOS zoom */
       <button class="btn btn-primary" onclick="openNewTerm()">Tạo kỳ mới</button>
     </div>
 
-    <!-- VIEW: LIST -->
-    <section id="listView">
+    <!-- VIEWS: shared toggle, two content panels -->
+    <section class="views-section">
       <div class="section-head" style="margin-bottom:var(--s-3)">
         <div>
-          <div class="section-title">Tất cả buổi</div>
-          <div class="section-sub" id="listViewSub">Buổi chưa học hiển thị trước</div>
+          <div class="section-title" id="viewTitle">Lịch tháng</div>
+          <div class="section-sub" id="viewSub">Bấm vào ô có buổi học để tick</div>
         </div>
         <div class="view-tabs" role="tablist" aria-label="Chế độ xem">
-          <button class="view-tab active" id="vt-list" onclick="setView('list')" role="tab" aria-selected="true" type="button">
+          <button class="view-tab" id="vtList" onclick="setView('list')" role="tab" aria-selected="false" type="button">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg>
             List
           </button>
-          <button class="view-tab" id="vt-cal" onclick="setView('calendar')" role="tab" aria-selected="false" type="button">
+          <button class="view-tab active" id="vtCal" onclick="setView('calendar')" role="tab" aria-selected="true" type="button">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
             Lịch
           </button>
         </div>
       </div>
-      <div class="tbl-wrap">
-        <div class="tbl-head">
-          <div>#</div><div>Thứ</div><div>Ngày</div><div></div>
-          <div style="text-align:center">Điểm danh</div>
-          <div>Ghi chú</div>
-        </div>
-        <div id="sessionList"><div class="loading">Đang tải dữ liệu...</div></div>
-      </div>
-    </section>
 
-    <!-- VIEW: CALENDAR -->
-    <section id="calView" style="display:none">
-      <div class="section-head" style="margin-bottom:var(--s-3)">
-        <div>
-          <div class="section-title">Lịch tháng</div>
-          <div class="section-sub">Bấm vào ô có buổi học để tick</div>
-        </div>
-        <div class="view-tabs" role="tablist">
-          <button class="view-tab" onclick="setView('list')" role="tab" aria-selected="false" type="button">List</button>
-          <button class="view-tab active" onclick="setView('calendar')" role="tab" aria-selected="true" type="button">Lịch</button>
+      <div id="listView" style="display:none">
+        <div class="tbl-wrap">
+          <div class="tbl-head">
+            <div>#</div><div>Thứ</div><div>Ngày</div><div></div>
+            <div style="text-align:center">Điểm danh</div>
+            <div>Ghi chú</div>
+          </div>
+          <div id="sessionList"><div class="loading">Đang tải dữ liệu...</div></div>
         </div>
       </div>
-      <div class="cal-wrap">
-        <div class="cal-nav">
-          <button class="cal-nav-btn" onclick="calPrev()" aria-label="Tháng trước">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-          </button>
-          <div class="cal-nav-title" id="calTitle">—</div>
-          <button class="cal-nav-btn" onclick="calNext()" aria-label="Tháng sau">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-          </button>
+
+      <div id="calView">
+        <div class="cal-wrap">
+          <div class="cal-nav">
+            <button class="cal-nav-btn" onclick="calPrev()" aria-label="Tháng trước">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <div class="cal-nav-title" id="calTitle">—</div>
+            <button class="cal-nav-btn" onclick="calNext()" aria-label="Tháng sau">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+          <div class="cal-dow">
+            <div class="cal-dow-cell">T2</div>
+            <div class="cal-dow-cell">T3</div>
+            <div class="cal-dow-cell">T4</div>
+            <div class="cal-dow-cell">T5</div>
+            <div class="cal-dow-cell">T6</div>
+            <div class="cal-dow-cell is-sat">T7</div>
+            <div class="cal-dow-cell is-sun">CN</div>
+          </div>
+          <div class="cal-grid" id="calGrid"></div>
         </div>
-        <div class="cal-dow">
-          <div class="cal-dow-cell">T2</div>
-          <div class="cal-dow-cell">T3</div>
-          <div class="cal-dow-cell">T4</div>
-          <div class="cal-dow-cell">T5</div>
-          <div class="cal-dow-cell">T6</div>
-          <div class="cal-dow-cell is-sat">T7</div>
-          <div class="cal-dow-cell is-sun">CN</div>
-        </div>
-        <div class="cal-grid" id="calGrid"></div>
       </div>
     </section>
 
@@ -1514,6 +1597,20 @@ input,textarea{font-size:var(--fs-16)} /* avoid iOS zoom */
     <div class="modal-foot">
       <button class="btn" onclick="closeModal()" type="button">Huỷ</button>
       <button class="btn btn-primary" id="btnSaveTerm" onclick="saveTerm()" type="button">Lưu kỳ mới</button>
+    </div>
+  </div>
+</div>
+
+<!-- Manage Terms Modal -->
+<div class="modal-bg" id="manageModal" role="dialog" aria-modal="true" aria-labelledby="manageTitle">
+  <div class="modal">
+    <h2 id="manageTitle">Quản lý kỳ học</h2>
+    <div class="modal-sub">Xem &amp; xoá các kỳ học đã tạo. Xoá là vĩnh viễn, không hoàn tác được.</div>
+    <div class="manage-list" id="manageList">
+      <div class="empty">Chưa có kỳ học nào</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeManageModal()" type="button">Đóng</button>
     </div>
   </div>
 </div>
@@ -1578,7 +1675,7 @@ function autoExtendActiveTerm(){
 // ── State ────────────────────────────────────────────────
 let state={terms:[],activeTerm:null,viewTerm:null};
 let noteTimers={};
-let currentView='list';
+let currentView='calendar';
 let calYear=new Date().getFullYear();
 let calMonth=new Date().getMonth();
 let popupSession=null;
@@ -1640,7 +1737,10 @@ function buildSessionMap(){
 function renderSidebarTerms(){
   const list=document.getElementById('sidebarTermsList');
   list.innerHTML='';
-  (state.terms||[]).forEach((t,i)=>{
+  const terms=state.terms||[];
+  // newest-first: iterate from end → start, but keep original "Kỳ N" numbering
+  for(let i=terms.length-1;i>=0;i--){
+    const t=terms[i];
     const isCurrent=t.id===(state.viewTerm||state.activeTerm);
     const isActive=t.id===state.activeTerm;
     const done=Object.values(t.attended||{}).filter(Boolean).length;
@@ -1656,7 +1756,7 @@ function renderSidebarTerms(){
         <div class="term-text-meta">${t.sessions} buổi · ${isActive?(isDone?'Hoàn thành':'Đang học'):'Kỳ trước'}</div>
       </span>`;
     list.appendChild(btn);
-  });
+  }
 }
 
 function renderStats(){
@@ -1679,7 +1779,22 @@ function renderStats(){
 
   document.getElementById('newTermBanner').classList.toggle('open', !!(complete&&isViewingActive));
 
-  if(!vt){return;}
+  if(!vt){
+    // empty state — reset all UI fields so they don't show stale data
+    document.getElementById('statTotal').textContent='—';
+    document.getElementById('statDone').textContent='—';
+    document.getElementById('statLeft').textContent='—';
+    document.getElementById('progressText').textContent='Chưa có kỳ học';
+    document.getElementById('progressPct').textContent='—';
+    document.getElementById('progressFill').style.width='0%';
+    document.getElementById('periodName').textContent='Chưa có kỳ học';
+    document.getElementById('periodMeta').innerHTML='<span class="meta-item" style="color:var(--text-3)">Tạo kỳ mới từ sidebar để bắt đầu</span>';
+    document.getElementById('periodNote').style.display='none';
+    document.getElementById('btnEdit').disabled=true;
+    document.getElementById('btnEdit').title='Chưa có kỳ học';
+    document.getElementById('editLockHint').style.display='none';
+    return;
+  }
   const done=Object.values(vt.attended||{}).filter(Boolean).length;
   const left=vt.sessions-done;
   const pct=Math.round(done/vt.sessions*100);
@@ -1691,30 +1806,28 @@ function renderStats(){
   document.getElementById('progressFill').style.width=pct+'%';
 
   const termIdx=(state.terms||[]).findIndex(t=>t.id===vt.id);
-  document.getElementById('periodName').textContent='Kỳ '+(termIdx+1);
   let badge=vt.id===state.activeTerm
     ?(complete?'<span class="badge badge-done">Hoàn thành</span>':'<span class="badge badge-active">Đang học</span>')
     :'<span class="badge badge-past">Kỳ trước</span>';
-  let meta=badge+' &nbsp;Đóng: '+fmtDate(vt.paidDate)+' &nbsp;·&nbsp; Bắt đầu: '+fmtDate(vt.startDate);
-  if(vt.note)meta+=' &nbsp;·&nbsp; <em>'+escHtml(vt.note)+'</em>';
+  document.getElementById('periodName').innerHTML='Kỳ '+(termIdx+1)+' '+badge;
+  const calIcon='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
+  const playIcon='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 4 20 12 6 20 6 4"/></svg>';
+  const meta=`
+    <span class="meta-item">${calIcon}<span class="meta-label">Đóng</span><span class="meta-val">${fmtDate(vt.paidDate)}</span></span>
+    <span class="meta-item">${playIcon}<span class="meta-label">Bắt đầu</span><span class="meta-val">${fmtDate(vt.startDate)}</span></span>`;
   document.getElementById('periodMeta').innerHTML=meta;
+  const noteEl=document.getElementById('periodNote');
+  if(vt.note){noteEl.textContent=vt.note;noteEl.style.display='block';}
+  else{noteEl.style.display='none';}
 
+  // edit button: only enabled for ACTIVE term with no attendance ticked
   const editBtn=document.getElementById('btnEdit');
   const lockHint=document.getElementById('editLockHint');
-  if(vt&&vt.id===state.activeTerm){
-    const hasTick=Object.values(vt.attended||{}).some(Boolean);
-    editBtn.disabled=hasTick;
-    editBtn.style.opacity=hasTick?'0.4':'1';
-    editBtn.style.cursor=hasTick?'not-allowed':'pointer';
-    editBtn.title=hasTick?'Không thể sửa khi đã có điểm danh':'Sửa kỳ đang xem';
-    if(lockHint)lockHint.style.display=hasTick?'inline':'none';
-  } else {
-    editBtn.disabled=true;
-    editBtn.style.opacity='0.4';
-    editBtn.style.cursor='not-allowed';
-    editBtn.title='Chỉ có thể sửa kỳ đang học';
-    if(lockHint)lockHint.style.display='none';
-  }
+  const hasTick=at&&Object.values(at.attended||{}).some(Boolean);
+  const canEdit=!!at && !hasTick;
+  editBtn.disabled=!canEdit;
+  editBtn.title=!at?'Chưa có kỳ học':(hasTick?'Không thể sửa khi đã có điểm danh':'Sửa kỳ hiện tại');
+  if(lockHint)lockHint.style.display=(at&&hasTick)?'block':'none';
 }
 
 // ── Today hero & upcoming (NEW) ──────────────────────────
@@ -1801,62 +1914,9 @@ function renderTodayHero(){
   }
 }
 
-function renderUpcoming(){
-  const section=document.getElementById('upcomingSection');
-  const list=document.getElementById('upcomingList');
-  const at=getTerm(state.activeTerm);
-  if(!at||!at.sessionDates){section.style.display='none';return;}
-  const today=dateStr(new Date());
-  // collect next unattended future sessions, skip the one shown in today hero
-  const todayIdx=at.sessionDates.indexOf(today);
-  let heroIdx=-1;
-  if(todayIdx>=0){heroIdx=todayIdx;}
-  else{
-    for(let i=0;i<at.sessionDates.length;i++){
-      if(at.sessionDates[i]>=today && !(at.attended||{})[i]){heroIdx=i;break;}
-    }
-  }
-  const upcoming=[];
-  for(let i=0;i<at.sessionDates.length;i++){
-    if(i===heroIdx)continue;
-    const ds=at.sessionDates[i];
-    if(ds>=today && !(at.attended||{})[i]){
-      upcoming.push({idx:i,ds});
-      if(upcoming.length>=3)break;
-    }
-  }
-  if(!upcoming.length){section.style.display='none';return;}
-  section.style.display='block';
-  list.innerHTML='';
-  upcoming.forEach(({idx,ds})=>{
-    const d=parseDate(ds);
-    const isSat=d.getDay()===6;
-    const item=document.createElement('div');
-    item.className='upcoming-item';
-    item.innerHTML=`
-      <div class="up-day ${isSat?'sat':'sun'}">
-        <div class="up-day-num">${d.getDate()}</div>
-        <div class="up-day-month">${VN_MONTHS_SHORT[d.getMonth()]}</div>
-      </div>
-      <div class="up-info">
-        <div class="up-title">${isSat?'Thứ Bảy':'Chủ Nhật'} · Buổi ${idx+1}</div>
-        <div class="up-meta">${VN_DOW_LONG[d.getDay()]}, ${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}</div>
-      </div>
-      <button class="up-tick" data-idx="${idx}" type="button">Điểm danh</button>`;
-    item.querySelector('.up-tick').onclick=()=>{
-      if(!at.attended)at.attended={};
-      at.attended[idx]=!at.attended[idx];
-      autoExtendActiveTerm();
-      pushToFirebase();
-    };
-    list.appendChild(item);
-  });
-}
-
 function render(){
   renderStats();
   renderTodayHero();
-  renderUpcoming();
   if(currentView==='list')renderList();
   else renderCalendar();
 }
@@ -2060,13 +2120,16 @@ function openPopup(ds,session,anchorEl){
   popup.style.display='block';
   document.getElementById('popupBg').classList.add('open');
 
+  // Popup uses position:fixed → coordinates are viewport-relative.
+  // getBoundingClientRect() returns viewport coords already, so NO scroll offset needed.
   const rect=anchorEl.getBoundingClientRect();
-  let left=rect.left+window.scrollX;
-  let top=rect.bottom+window.scrollY+8;
-  if(left+330>window.innerWidth)left=window.innerWidth-340;
-  if(top+280>window.innerHeight+window.scrollY)top=rect.top+window.scrollY-288;
-  popup.style.left=Math.max(8,left)+'px';
-  popup.style.top=Math.max(8,top)+'px';
+  const popupW=330, popupH=280, margin=8;
+  let left=rect.left;
+  let top=rect.bottom+margin;
+  if(left+popupW>window.innerWidth)left=window.innerWidth-popupW-margin;
+  if(top+popupH>window.innerHeight)top=rect.top-popupH-margin;
+  popup.style.left=Math.max(margin,left)+'px';
+  popup.style.top=Math.max(margin,top)+'px';
 }
 
 window.closePopup=function(){
@@ -2077,27 +2140,57 @@ window.closePopup=function(){
 
 // ── View switch ──────────────────────────────────────────
 window.setView=function(v){
+  closeSidebar(); // mobile: dismiss drawer regardless
+  if(currentView===v){
+    // already on this view — re-sync UI just in case but don't auto-jump month
+    syncViewToggleUI(v);
+    return;
+  }
+  const prev=currentView;
   currentView=v;
   document.getElementById('listView').style.display=v==='list'?'block':'none';
   document.getElementById('calView').style.display=v==='calendar'?'block':'none';
-  // sidebar nav
-  document.getElementById('btnList').classList.toggle('active',v==='list');
-  document.getElementById('btnCal').classList.toggle('active',v==='calendar');
-  // inline view tabs
-  const vtList=document.getElementById('vt-list');
-  const vtCal=document.getElementById('vt-cal');
-  if(vtList)vtList.classList.toggle('active',v==='list');
-  if(vtCal)vtCal.classList.toggle('active',v==='calendar');
+  syncViewToggleUI(v);
   if(v==='calendar'){
+    // when switching INTO calendar, jump to current month if it has sessions
+    // otherwise fall back to the first session month of the viewed term
     const vt=getTerm(state.viewTerm||state.activeTerm);
     if(vt&&vt.sessionDates&&vt.sessionDates.length){
-      const d=parseDate(vt.sessionDates[0]);
-      calYear=d.getFullYear();calMonth=d.getMonth();
+      const today=new Date();
+      const curYM=today.getFullYear()+'-'+pad2(today.getMonth()+1);
+      const hasCurMonth=vt.sessionDates.some(ds=>ds.startsWith(curYM));
+      if(hasCurMonth){
+        calYear=today.getFullYear();calMonth=today.getMonth();
+      } else {
+        const d=parseDate(vt.sessionDates[0]);
+        calYear=d.getFullYear();calMonth=d.getMonth();
+      }
     }
     renderCalendar();
+  } else {
+    renderList();
   }
-  closeSidebar();
 };
+function syncViewToggleUI(v){
+  // sidebar nav
+  const sb=document.getElementById('btnList'); if(sb)sb.classList.toggle('active',v==='list');
+  const sc=document.getElementById('btnCal'); if(sc)sc.classList.toggle('active',v==='calendar');
+  // inline view tabs (single shared pair)
+  const vtList=document.getElementById('vtList');
+  const vtCal=document.getElementById('vtCal');
+  if(vtList){vtList.classList.toggle('active',v==='list');vtList.setAttribute('aria-selected',v==='list');}
+  if(vtCal){vtCal.classList.toggle('active',v==='calendar');vtCal.setAttribute('aria-selected',v==='calendar');}
+  // section title + sub
+  const title=document.getElementById('viewTitle');
+  const sub=document.getElementById('viewSub');
+  if(v==='calendar'){
+    if(title)title.textContent='Lịch tháng';
+    if(sub)sub.textContent='Bấm vào ô có buổi học để tick';
+  } else {
+    if(title)title.textContent='Tất cả buổi';
+    if(sub)sub.textContent='Buổi chưa học hiển thị trước';
+  }
+}
 window.calPrev=function(){calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCalendar();};
 window.calNext=function(){calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCalendar();};
 window.switchTerm=function(id){state.viewTerm=id;render();closeSidebar();};
@@ -2146,8 +2239,14 @@ function openTermModal(termToEdit){
 
 window.openNewTerm=function(){openTermModal(null);};
 window.openEditTerm=function(){
-  const vt=getTerm(state.viewTerm||state.activeTerm);
-  if(vt)openTermModal(vt);
+  // Always edit the active (current) term, regardless of which term is being viewed
+  const at=getTerm(state.activeTerm);
+  if(!at)return;
+  const hasTick=Object.values(at.attended||{}).some(Boolean);
+  if(hasTick){return;} // safeguard — button should already be disabled
+  // Switch view to active term so the user sees the term they're editing
+  state.viewTerm=state.activeTerm;
+  openTermModal(at);
 };
 window.saveTerm=function(){
   const pd=document.getElementById('inp-paid-date').value;
@@ -2183,6 +2282,75 @@ window.selectPkg=function(v){
 };
 document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal();});
 
+// ── Manage Terms (delete) ────────────────────────────────
+window.openManageTerms=function(){
+  renderManageList();
+  document.getElementById('manageModal').classList.add('open');
+  closeSidebar();
+};
+window.closeManageModal=function(){
+  document.getElementById('manageModal').classList.remove('open');
+};
+function renderManageList(){
+  const list=document.getElementById('manageList');
+  list.innerHTML='';
+  const terms=state.terms||[];
+  if(!terms.length){
+    list.innerHTML='<div class="empty">Chưa có kỳ học nào</div>';
+    return;
+  }
+  // newest-first iteration, preserve original "Kỳ N" numbering
+  for(let i=terms.length-1;i>=0;i--){
+    const t=terms[i];
+    const isActive=t.id===state.activeTerm;
+    const done=Object.values(t.attended||{}).filter(Boolean).length;
+    const isDone=done>=t.sessions;
+    const badge=isActive
+      ?(isDone?'<span class="badge badge-done">Hoàn thành</span>':'<span class="badge badge-active">Đang học</span>')
+      :'<span class="badge badge-past">Kỳ trước</span>';
+    const row=document.createElement('div');
+    row.className='manage-term'+(isActive?' current':'');
+    const noteHtml=t.note?`<div class="manage-term-note">${escHtml(t.note)}</div>`:'';
+    row.innerHTML=`
+      <div class="manage-term-info">
+        <div class="manage-term-name">Kỳ ${i+1} ${badge}</div>
+        <div class="manage-term-meta">Đóng ${fmtDate(t.paidDate)} · Bắt đầu ${fmtDate(t.startDate)} · ${t.sessions} buổi</div>
+        <div class="manage-term-progress">Đã điểm danh ${done}/${t.sessions} buổi</div>
+        ${noteHtml}
+      </div>
+      <button class="btn-danger" data-tid="${t.id}" type="button" aria-label="Xoá kỳ ${i+1}">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        Xoá
+      </button>`;
+    row.querySelector('.btn-danger').onclick=()=>deleteTerm(t.id);
+    list.appendChild(row);
+  }
+}
+window.deleteTerm=function(id){
+  const t=getTerm(id);
+  if(!t)return;
+  const termIdx=(state.terms||[]).findIndex(x=>x.id===id);
+  const done=Object.values(t.attended||{}).filter(Boolean).length;
+  const isActive=id===state.activeTerm;
+  let msg='Xoá Kỳ '+(termIdx+1)+'?';
+  if(done>0)msg+='\n\nKỳ này đã có '+done+' buổi điểm danh. Toàn bộ dữ liệu sẽ MẤT.';
+  if(isActive)msg+='\n\nĐây là kỳ đang học. Sau khi xoá, kỳ gần nhất còn lại sẽ trở thành kỳ hiện tại.';
+  msg+='\n\nHành động không thể hoàn tác. Tiếp tục?';
+  if(!confirm(msg))return;
+
+  state.terms=(state.terms||[]).filter(x=>x.id!==id);
+
+  if(isActive){
+    state.activeTerm=state.terms.length?state.terms[state.terms.length-1].id:null;
+  }
+  if(state.viewTerm===id){
+    state.viewTerm=state.activeTerm;
+  }
+  pushToFirebase();
+  renderManageList(); // refresh list while modal still open
+};
+document.getElementById('manageModal').addEventListener('click',function(e){if(e.target===this)closeManageModal();});
+
 // ── Sidebar (mobile) ─────────────────────────────────────
 window.toggleSidebar=function(){
   document.getElementById('sidebar').classList.toggle('open');
@@ -2211,6 +2379,7 @@ window.setTheme=function(theme){
 document.addEventListener('keydown',(e)=>{
   if(e.key==='Escape'){
     if(document.getElementById('modal').classList.contains('open')){closeModal();}
+    else if(document.getElementById('manageModal').classList.contains('open')){closeManageModal();}
     else if(document.getElementById('calPopup').style.display==='block'){closePopup();}
     else if(document.getElementById('sidebar').classList.contains('open')){closeSidebar();}
   }
